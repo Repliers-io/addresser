@@ -1,9 +1,9 @@
-var allStates = require('./data/states.json');
-var usStreetTypes = require('./data/us-street-types.json');
-var allCities = require('./data/cities.json');
-var usStates = require('./data/us-states.json');
-var usCities = require('./data/us-cities.json');
-
+const allStates = require('./data/states.json');
+const usStreetTypes = require('./data/us-street-types.json');
+const caStreetTypes = require('./data/ca-street-types.json');
+const allCities = require('./data/cities.json');
+const usStates = require('./data/us-states.json');
+const usCities = require('./data/us-cities.json');
 
 
 'use strict';
@@ -13,7 +13,7 @@ var usCities = require('./data/us-cities.json');
  * @param {string} address
  * @return {string}
  **/
- 
+
 //TODO move this to utils file
 function getKeyByValue(object, value) {
   return Object.keys(object).find(key => object[key] === value);
@@ -32,14 +32,45 @@ function randomProperty (obj) {
 };
 
 var usStreetDirectional = {
-    north       : "N",
-    northeast   : "NE",
-    east        : "E",
-    southeast   : "SE",
-    south       : "S",
-    southwest   : "SW",
-    west        : "W",
-    northwest   : "NW",
+   "N": "N",
+   "NE": "NE",
+   "E": "E",
+   "SE": "SE",
+   "S": "S",
+   "SW": "SW",
+   "W": "W",
+   "NW": "NW"
+};
+
+var caStreetDirectional = {
+
+   "N": "N",
+   "North": "N",
+
+   "E": "E",
+   "East": "E",
+
+   "S": "S",
+   "South": "S",
+
+   "W": "W",
+   "West": "W",
+
+   "NE": "NE",
+   "Northeast": "NE",
+   "North East": "NE",
+
+   "SE": "SE",
+   "SouthEast": "SE",
+   "South East": "SE",
+
+   "NW": "NW",
+   "North West": "NW",
+   "Northwest": "NW",
+
+   "SW": "SW",
+   "Southwest"    : "SW",
+   "South West": "SW"
 };
 
 var usLine2Prefixes = {
@@ -95,15 +126,22 @@ module.exports = {
     address = address.replace(/  +/g, ' ');
     // Assume comma, newline and tab is an intentional delimiter
     var addressParts = address.split(/,|\t|\n/);
-    
+
     var result = {};
 
     // Check if the last section contains country reference (Just supports US for now)
     var countrySection = addressParts[addressParts.length-1].trim();
+    let streetTypes = usStreetTypes;
+    let streetDirectional = usStreetDirectional;
     if (countrySection === 'US' || countrySection === 'USA' || countrySection === 'United States' || countrySection === 'Canada') {
       addressParts.splice(-1,1);
+
+      if (countrySection === 'Canada') {
+         streetTypes = caStreetTypes;
+         streetDirectional = caStreetDirectional;
+      }
     }
-    
+
     // Assume the last address section contains state, zip or both
     var stateString = addressParts[addressParts.length-1].trim();
     // Parse and remove zip or zip plus 4 from end of string
@@ -158,12 +196,12 @@ module.exports = {
       placeString = addressParts[addressParts.length-1].trim();
     }
     result.placeName = "";
-   
+
     allCities[result.stateAbbreviation].some(function(element) {
       var re = new RegExp(element + "$", "i");
       if (placeString.match(re)) {
         placeString = placeString.replace(re,""); // Carve off the place name
-        
+
         result.placeName = element;
         return element; // Found a winner - stop looking for cities
       }
@@ -172,10 +210,10 @@ module.exports = {
       result.placeName = toTitleCase(placeString);
       placeString = "";
     }
-    
+
     // Parse the street data
     var streetString = "";
-    var usStreetDirectionalString = Object.keys(usStreetDirectional).map(x => usStreetDirectional[x]).join('|');
+    var usStreetDirectionalString = Object.keys(streetDirectional).join('|');
     var usLine2String = Object.keys(usLine2Prefixes).join('|');
 
     if (placeString.length > 0) { // Check if anything is left of last section
@@ -183,7 +221,7 @@ module.exports = {
     } else {
       addressParts.splice(-1,1);
     }
-    
+
     if (addressParts.length > 2) {
       throw 'Can not parse address. More than two address lines.';
     } else if (addressParts.length === 2) {
@@ -209,9 +247,10 @@ module.exports = {
         }
       }
       //Assume street address comes first and the rest is secondary address
-      var reStreet = new RegExp('\.\*\\b(?:' + 
-        Object.keys(usStreetTypes).join('|') + ')\\b\\.?' + 
+      var reStreet = new RegExp('\.\*\\b(?:' +
+        Object.keys(streetTypes).join('|') + ')\\b\\.?' +
         '( +(?:' + usStreetDirectionalString + ')\\b)?', 'i');
+
       var rePO = new RegExp('(P\\.?O\\.?|POST\\s+OFFICE)\\s+(BOX|DRAWER)\\s\\w+', 'i');
       var reAveLetter = new RegExp('\.\*\\b(ave.?|avenue)\.\*\\b[a-zA-Z]\\b', 'i');
       var reNoSuffix = new RegExp('\\b\\d+[a-z]?\\s[a-zA-Z0-9_ ]+\\b', 'i');
@@ -226,10 +265,10 @@ module.exports = {
             result.addressLine2 = streetString;
           }
         }
-        
+
         var streetParts = result.addressLine1.split(' ');
-    
-        // Assume type is last and number is first   
+
+        // Assume type is last and number is first
         result.streetNumber = streetParts[0]; // Assume number is first element
 
         // Normalize to Ave
@@ -254,30 +293,33 @@ module.exports = {
           }
         }
         var streetParts = result.addressLine1.split(' ');
-    
+
         // Check if directional is last element
         var re = new RegExp('\.\*\\b(?:' + usStreetDirectionalString + ')$', 'i');
+
         if (result.addressLine1.match(re)) {
-          result.streetDirection = streetParts.pop().toUpperCase();
+          const direction = streetParts.pop().split("");
+          const [f, ...rest] = direction;
+          result.streetDirection = streetDirectional[f.toUpperCase() + rest.join("")];
         }
-        
-        // Assume type is last and number is first   
+
+        // Assume type is last and number is first
         result.streetNumber = streetParts[0]; // Assume number is first element
-        
+
         // If there are only 2 street parts (number and name) then its likely missing a "real" suffix and the street name just happened to match a suffix
         if (streetParts.length > 2) {
           // Remove '.' if it follows streetSuffix
           streetParts[streetParts.length-1] = streetParts[streetParts.length-1].replace(/\.$/, '');
-          result.streetSuffix = toTitleCase(usStreetTypes[streetParts[streetParts.length-1].toLowerCase()]);
+          result.streetSuffix = toTitleCase(streetTypes[streetParts[streetParts.length-1].toLowerCase()]);
         }
-        
+
         result.streetName = streetParts[1]; // Assume street name is everything in the middle
         for (var i = 2; i < streetParts.length-1; i++) {
           result.streetName = result.streetName + " " + streetParts[i];
         }
         result.streetName = toTitleCase(result.streetName);
         result.addressLine1 = [result.streetNumber, result.streetName].join(" ");
-        
+
         if (result.hasOwnProperty('streetSuffix')) {
           result.addressLine1 = result.addressLine1 + ' ' + result.streetSuffix;
         }
@@ -294,12 +336,12 @@ module.exports = {
           result.addressLine2 = streetString.match(reLine2)[0].trim();
           streetString = streetString.replace(reLine2,"").trim(); // Carve off the first address line
         }
-        
+
         result.addressLine1 = streetString.match(reNoSuffix)[0];
         streetString = streetString.replace(reNoSuffix,"").trim(); // Carve off the first address line
         var streetParts = result.addressLine1.split(' ');
-    
-        // Assume type is last and number is first   
+
+        // Assume type is last and number is first
         result.streetNumber = streetParts[0]; // Assume number is first element
         streetParts.shift(); // Remove the first element
         result.streetName = streetParts.join(' '); // Assume street name is everything else
@@ -309,7 +351,7 @@ module.exports = {
     } else {
       throw 'Can not parse address. Invalid street address data. Input string: ' + address;
     }
-    
+
     var addressString = result.addressLine1;
     if (result.hasOwnProperty('addressLine2')) {
       addressString += ', ' + result.addressLine2;
@@ -319,7 +361,7 @@ module.exports = {
       result['formattedAddress'] = idString;
       result['id'] = encodeURI(idString.replace(/ /g, '-').replace(/\#/g, '-').replace(/\//g, '-').replace(/\./g, '-'));
     }
-      
+
     return result;
   },
 
