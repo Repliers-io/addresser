@@ -931,18 +931,92 @@ describe('##cities', function() {
 });
 
 describe('Extra canada', function() {
-   it('should parse a simple Canadian Address with Full word Street Direction', function() {
-           var result = addresser.parseAddress('310 8 Street North, Calgary, Alberta T2P 3P3, Canada');
-           expect(result.streetNumber).to.equal("310");
-           expect(result.streetName).to.equal("8");
-           expect(result.streetSuffix).to.equal("St");
-           expect(result.streetDirection).to.equal("N");
-           expect(result.addressLine1).to.equal("310 8 St N");
-           expect(result.hasOwnProperty("addressLine2")).to.equal(false);
-           expect(result.placeName).to.equal("Calgary");
-           expect(result.stateAbbreviation).to.equal("AB");
-           expect(result.stateName).to.equal("Alberta");
-           expect(result.zipCode).to.equal("T2P 3P3");
-           expect(result.hasOwnProperty("zipCodePlusFour")).to.equal(false);
-       });
-})
+    it('should parse a simple Canadian Address with Full word Street Direction', function() {
+        var result = addresser.parseAddress('310 8 Street North, Calgary, Alberta T2P 3P3, Canada');
+        expect(result.streetNumber).to.equal("310");
+        expect(result.streetName).to.equal("8");
+        expect(result.streetSuffix).to.equal("St");
+        expect(result.streetDirection).to.equal("N");
+        expect(result.addressLine1).to.equal("310 8 St N");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+        expect(result.stateName).to.equal("Alberta");
+        expect(result.zipCode).to.equal("T2P 3P3");
+        expect(result.hasOwnProperty("zipCodePlusFour")).to.equal(false);
+    });
+
+    it('should parse a simple Canadian Address with 2-letter Street Direction', function() {
+        var result = addresser.parseAddress('310 8 Street SW, Calgary, Alberta T2P 3P3, Canada');
+        expect(result.streetNumber).to.equal("310");
+        expect(result.streetName).to.equal("8");
+        expect(result.streetSuffix).to.equal("St");
+        expect(result.streetDirection).to.equal("SW");
+        expect(result.addressLine1).to.equal("310 8 St SW");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+        expect(result.stateName).to.equal("Alberta");
+        expect(result.zipCode).to.equal("T2P 3P3");
+        expect(result.hasOwnProperty("zipCodePlusFour")).to.equal(false);
+    });
+
+    it('should parse a simple Canadian Address with 1-letter Street Direction', function() {
+        var result = addresser.parseAddress('310 8 Street N, Calgary, Alberta T2P 3P3, Canada');
+        expect(result.streetNumber).to.equal("310");
+        expect(result.streetName).to.equal("8");
+        expect(result.streetSuffix).to.equal("St");
+        expect(result.streetDirection).to.equal("N");
+        expect(result.addressLine1).to.equal("310 8 St N");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+        expect(result.stateName).to.equal("Alberta");
+        expect(result.zipCode).to.equal("T2P 3P3");
+        expect(result.hasOwnProperty("zipCodePlusFour")).to.equal(false);
+    });
+
+    it('should parse a simple Canadian Address with Full word Street Direction', function() {
+        var result = addresser.parseAddress('310 8 Street North, Calgary, Alberta T2P 3P3, Canada');
+        expect(result.streetNumber).to.equal("310");
+        expect(result.streetName).to.equal("8");
+        expect(result.streetSuffix).to.equal("St");
+        expect(result.streetDirection).to.equal("N");
+        expect(result.addressLine1).to.equal("310 8 St N");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+        expect(result.stateName).to.equal("Alberta");
+        expect(result.zipCode).to.equal("T2P 3P3");
+        expect(result.hasOwnProperty("zipCodePlusFour")).to.equal(false);
+    });
+
+    it('should parse a simple Canadian Address with Full word Street Direction', function() {
+        var result = addresser.parseAddress('310 8 Street Southwest, Calgary, Alberta T2P 3P3, Canada');
+        expect(result.streetNumber).to.equal("310");
+        expect(result.streetName).to.equal("8");
+        expect(result.streetSuffix).to.equal("St");
+        expect(result.streetDirection).to.equal("SW");
+        expect(result.addressLine1).to.equal("310 8 St SW");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+        expect(result.stateName).to.equal("Alberta");
+        expect(result.zipCode).to.equal("T2P 3P3");
+        expect(result.hasOwnProperty("zipCodePlusFour")).to.equal(false);
+    });
+
+    it('should parse a simple Canadian Address with Full word Street Direction without ZipCode', function() {
+        var result = addresser.parseAddress('310 8 Street Southwest, Calgary, Alberta, Canada');
+        expect(result.streetNumber).to.equal("310");
+        expect(result.streetName).to.equal("8");
+        expect(result.streetSuffix).to.equal("St");
+        expect(result.streetDirection).to.equal("SW");
+        expect(result.addressLine1).to.equal("310 8 St SW");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+        expect(result.stateName).to.equal("Alberta");
+        expect(result.hasOwnProperty("zipCodePlusFour")).to.equal(false);
+    });
+});
