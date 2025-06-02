@@ -1019,4 +1019,19 @@ describe('Extra canada', function() {
         expect(result.stateName).to.equal("Alberta");
         expect(result.hasOwnProperty("zipCodePlusFour")).to.equal(false);
     });
+
+    it('should parse a simple Canadian Address with Canadian street type', function() {
+        var result = addresser.parseAddress('310 Main Private, Calgary, Alberta T2P 3P3, Canada');
+        expect(result.streetNumber).to.equal("310");
+        expect(result.streetName).to.equal("Main");
+        expect(result.streetSuffix).to.equal("Private");
+        expect(result.streetDirection).to.equal(undefined);
+        expect(result.addressLine1).to.equal("310 Main Private");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+        expect(result.stateName).to.equal("Alberta");
+        expect(result.zipCode).to.equal("T2P 3P3");
+        expect(result.hasOwnProperty("zipCodePlusFour")).to.equal(false);
+    });
 });
