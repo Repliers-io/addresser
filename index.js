@@ -61,7 +61,7 @@ var caStreetDirectional = {
    "North East": "NE",
 
    "SE": "SE",
-   "SouthEast": "SE",
+   "Southeast": "SE",
    "South East": "SE",
 
    "NW": "NW",

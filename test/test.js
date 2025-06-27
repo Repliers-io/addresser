@@ -1034,4 +1034,16 @@ describe('Extra canada', function() {
         expect(result.zipCode).to.equal("T2P 3P3");
         expect(result.hasOwnProperty("zipCodePlusFour")).to.equal(false);
     });
+
+    it('should parse a simple Canadian Address with southeast street direction', function() {
+        var result = addresser.parseAddress('508 7 Avenue Southeast, Calgary, AB, Canada');
+        expect(result.streetNumber).to.equal("508");
+        expect(result.streetName).to.equal("7");
+        expect(result.streetSuffix).to.equal("Avenue");
+        expect(result.streetDirection).to.equal('SE');
+        expect(result.addressLine1).to.equal("508 7 Avenue SE");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+    });
 });
