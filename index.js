@@ -213,7 +213,7 @@ module.exports = {
 
     // Parse the street data
     var streetString = "";
-    var usStreetDirectionalString = Object.keys(streetDirectional).join('|');
+    var streetDirectionalString = Object.keys(streetDirectional).join('|');
     var usLine2String = Object.keys(usLine2Prefixes).join('|');
 
     if (placeString.length > 0) { // Check if anything is left of last section
@@ -249,7 +249,7 @@ module.exports = {
       //Assume street address comes first and the rest is secondary address
       var reStreet = new RegExp('\.\*\\b(?:' +
         Object.keys(streetTypes).join('|') + ')\\b\\.?' +
-        '( +(?:' + usStreetDirectionalString + ')\\b)?', 'i');
+        '( +(?:' + streetDirectionalString + ')\\b)?', 'i');
 
       var rePO = new RegExp('(P\\.?O\\.?|POST\\s+OFFICE)\\s+(BOX|DRAWER)\\s\\w+', 'i');
       var reAveLetter = new RegExp('\.\*\\b(ave.?|avenue)\.\*\\b[a-zA-Z]\\b', 'i');
@@ -293,14 +293,16 @@ module.exports = {
           }
         }
         var streetParts = result.addressLine1.split(' ');
-
         // Check if directional is last element
-        var re = new RegExp('\.\*\\b(?:' + usStreetDirectionalString + ')$', 'i');
+        var re = new RegExp('\.\*\\b(?:' + streetDirectionalString + ')$', 'i');
 
         if (result.addressLine1.match(re)) {
           const direction = streetParts.pop().split("");
+
           const [f, ...rest] = direction;
-          result.streetDirection = streetDirectional[f.toUpperCase() + rest.join("")];
+          // rest.length > 2 is to handle long full street directions, if it's just abbreviation like NW, SW, etc, we don't change letter case.
+          // But if it's full direction like Northwest, then we do.
+          result.streetDirection = streetDirectional[f.toUpperCase() + (rest.length > 2 ? rest.join("").toLowerCase() : rest.join(""))];
         }
 
         // Assume type is last and number is first
