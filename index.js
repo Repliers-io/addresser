@@ -73,6 +73,8 @@ var caStreetDirectional = {
    "South West": "SW"
 };
 
+const caStreetSpaceDirectional = {'North East': 'Northeast', 'North West': 'NorthWest', 'South East': 'SouthEast'  , 'South West': 'SouthWest'};
+
 var usLine2Prefixes = {
     'APARTMENT' :	'APT',
     'APT'       : 'APT',
@@ -246,6 +248,16 @@ module.exports = {
           streetString = streetString.replace(re,"").trim(); // Carve off the line 2 data
         }
       }
+
+      // For street directions with spaces replace with the direction with no spaces
+      const caStreetSpaceDirectionalKeys = Object.keys(caStreetSpaceDirectional);
+      const spaceDirections = new RegExp('(' + Object.keys(caStreetSpaceDirectionalKeys).join('|') + ')', 'i');
+      if (streetString.match(spaceDirections)) {
+         caStreetSpaceDirectionalKeys.forEach(d => {
+            streetString = streetString.replace(new RegExp(`(${d})`, 'i'), caStreetSpaceDirectional[d]);
+         })
+      }
+
       //Assume street address comes first and the rest is secondary address
       var reStreet = new RegExp('\.\*\\b(?:' +
         Object.keys(streetTypes).join('|') + ')\\b\\.?' +
@@ -353,6 +365,8 @@ module.exports = {
     } else {
       throw 'Can not parse address. Invalid street address data. Input string: ' + address;
     }
+
+
 
     var addressString = result.addressLine1;
     if (result.hasOwnProperty('addressLine2')) {
