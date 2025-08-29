@@ -1047,18 +1047,53 @@ describe('Extra canada', function() {
         expect(result.stateAbbreviation).to.equal("AB");
     });
 
-    // TODO: Fix code so streetDirection would be matched without case sensitivity
-    // it('should parse a simple Canadian Address with any-case southeast street direction', function() {
-    //     var result = addresser.parseAddress('508 Queens dr SouthEast, Calgary, AB, Canada');
-    //     expect(result.streetNumber).to.equal("508");
-    //     expect(result.streetName).to.equal("Queens");
-    //     expect(result.streetSuffix).to.equal("Drive");
-    //     expect(result.streetDirection).to.equal('SE');
-    //     expect(result.addressLine1).to.equal("508 Queens Drive SE");
-    //     expect(result.hasOwnProperty("addressLine2")).to.equal(false);
-    //     expect(result.placeName).to.equal("Calgary");
-    //     expect(result.stateAbbreviation).to.equal("AB");
-    // });
+    it('should parse a simple Canadian Address with any-case southeast street direction', function() {
+        var result = addresser.parseAddress('508 Queens dr SoUthEaSt, Calgary, AB, Canada');
+        expect(result.streetNumber).to.equal("508");
+        expect(result.streetName).to.equal("Queens");
+        expect(result.streetSuffix).to.equal("Drive");
+        expect(result.streetDirection).to.equal('SE');
+        expect(result.addressLine1).to.equal("508 Queens Drive SE");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+    });
+
+    it('should parse a simple Canadian Address with any-case street direction - North East', function() {
+        var result = addresser.parseAddress('508 Queens dr North East, Calgary, AB, Canada');
+        expect(result.streetNumber).to.equal("508");
+        expect(result.streetName).to.equal("Queens");
+        expect(result.streetSuffix).to.equal("Drive");
+        expect(result.streetDirection).to.equal('NE');
+        expect(result.addressLine1).to.equal("508 Queens Drive NE");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+    });
+
+    it('should parse a simple Canadian Address with any-case street direction - NoRth EaSt', function() {
+        var result = addresser.parseAddress('508 Queens dr NoRth EaSt, Calgary, AB, Canada');
+        expect(result.streetNumber).to.equal("508");
+        expect(result.streetName).to.equal("Queens");
+        expect(result.streetSuffix).to.equal("Drive");
+        expect(result.streetDirection).to.equal('NE');
+        expect(result.addressLine1).to.equal("508 Queens Drive NE");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+    });
+
+    it('should parse a simple Canadian Address with any-case street direction - NE', function() {
+        var result = addresser.parseAddress('508 Queens dr NE, Calgary, AB, Canada');
+        expect(result.streetNumber).to.equal("508");
+        expect(result.streetName).to.equal("Queens");
+        expect(result.streetSuffix).to.equal("Drive");
+        expect(result.streetDirection).to.equal('NE');
+        expect(result.addressLine1).to.equal("508 Queens Drive NE");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+    });
 
     it('should parse a simple Canadian Address with Ln and SW street direction', function() {
         var result = addresser.parseAddress('15 Signal Hill Ln SW, Calgary, AB, Canada');
