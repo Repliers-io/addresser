@@ -1094,4 +1094,30 @@ describe('Extra canada', function() {
         expect(result.placeName).to.equal("Calgary");
         expect(result.stateAbbreviation).to.equal("AB");
     });
+
+    it('should parse a simple Canadian Address with Ln and SW street direction', function() {
+        var result = addresser.parseAddress('15 Signal Hill Ln SW, Calgary, AB, Canada');
+        expect(result.streetNumber).to.equal("15");
+        expect(result.streetName).to.equal("Signal Hill");
+        expect(result.streetSuffix).to.equal("Lane");
+        expect(result.streetDirection).to.equal('SW');
+        expect(result.addressLine1).to.equal("15 Signal Hill Lane SW");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+    });
+
+    it('should parse a simple Canadian Address with Pvt and SW street direction', function() {
+        var result = addresser.parseAddress('15 Signal Hill Pvt SW, Calgary, AB, Canada');
+        expect(result.streetNumber).to.equal("15");
+        expect(result.streetName).to.equal("Signal Hill");
+        expect(result.streetSuffix).to.equal("Private");
+        expect(result.streetDirection).to.equal('SW');
+        expect(result.addressLine1).to.equal("15 Signal Hill Private SW");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Calgary");
+        expect(result.stateAbbreviation).to.equal("AB");
+    });
+
+
 });
