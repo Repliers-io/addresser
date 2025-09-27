@@ -1131,5 +1131,16 @@ describe('Extra canada', function() {
         expect(result.stateAbbreviation).to.equal("BC");
     });
 
+    it('should parse a simple Canadian Address in Fort Qu’Appelle', function() {
+        var result = addresser.parseAddress('122 Company Ave S, Fort Qu’Appelle, SK S0G 1S0');
+        expect(result.streetNumber).to.equal("122");
+        expect(result.streetName).to.equal("Company");
+        expect(result.streetSuffix).to.equal("Avenue");
+        expect(result.streetDirection).to.equal('S');
+        expect(result.addressLine1).to.equal("122 Company Avenue S");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Fort Qu’Appelle");
+        expect(result.stateAbbreviation).to.equal("SK");
+    });
 
 });
