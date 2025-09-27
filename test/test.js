@@ -1119,5 +1119,17 @@ describe('Extra canada', function() {
         expect(result.stateAbbreviation).to.equal("AB");
     });
 
+    it('should parse a simple Canadian Address in Port Coquitlam', function() {
+        var result = addresser.parseAddress('2850 Shaughnessy St, Port Coquitlam, BC V3C 6K5, Canada');
+        expect(result.streetNumber).to.equal("2850");
+        expect(result.streetName).to.equal("Shaughnessy");
+        expect(result.streetSuffix).to.equal("Street");
+        expect(result.streetDirection).to.equal(undefined);
+        expect(result.addressLine1).to.equal("2850 Shaughnessy Street");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Port Coquitlam");
+        expect(result.stateAbbreviation).to.equal("BC");
+    });
+
 
 });
