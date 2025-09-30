@@ -1131,6 +1131,30 @@ describe('Extra canada', function() {
         expect(result.stateAbbreviation).to.equal("BC");
     });
 
+    it('should parse a simple Canadian Address in Port Coquitlam 2', function() {
+        var result = addresser.parseAddress('3377 Coast Meridian Rd, Port Coquitlam, BC, V3B 3N6, Canada');
+        expect(result.streetNumber).to.equal("3377");
+        expect(result.streetName).to.equal("Coast Meridian");
+        expect(result.streetSuffix).to.equal("Road");
+        expect(result.streetDirection).to.equal(undefined);
+        expect(result.addressLine1).to.equal("3377 Coast Meridian Road");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Port Coquitlam");
+        expect(result.stateAbbreviation).to.equal("BC");
+    });
+
+    it('should parse a simple Canadian Address in Port Coquitlam 3 - NO Canada in address', function() {
+        var result = addresser.parseAddress('3377 Coast Meridian Rd, Port Coquitlam, BC, V3B 3N6');
+        expect(result.streetNumber).to.equal("3377");
+        expect(result.streetName).to.equal("Coast Meridian");
+        expect(result.streetSuffix).to.equal("Rd");
+        expect(result.streetDirection).to.equal(undefined);
+        expect(result.addressLine1).to.equal("3377 Coast Meridian Rd");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Port Coquitlam");
+        expect(result.stateAbbreviation).to.equal("BC");
+    });
+
     it('should parse a simple Canadian Address in Fort Qu’Appelle', function() {
         var result = addresser.parseAddress('122 Company Ave S, Fort Qu’Appelle, SK S0G 1S0');
         expect(result.streetNumber).to.equal("122");
