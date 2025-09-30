@@ -1155,15 +1155,39 @@ describe('Extra canada', function() {
         expect(result.stateAbbreviation).to.equal("BC");
     });
 
-    it('should parse a simple Canadian Address in Fort Qu’Appelle', function() {
-        var result = addresser.parseAddress('122 Company Ave S, Fort Qu’Appelle, SK S0G 1S0');
+    it('should parse a simple Canadian Address in Port Coquitlam 4', function() {
+        var result = addresser.parseAddress('1255 Riverside Dr, Port Coquitlam, BC, V3B 7W5, Canada');
+        expect(result.streetNumber).to.equal("1255");
+        expect(result.streetName).to.equal("Riverside");
+        expect(result.streetSuffix).to.equal("Drive");
+        expect(result.streetDirection).to.equal(undefined);
+        expect(result.addressLine1).to.equal("1255 Riverside Drive");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Port Coquitlam");
+        expect(result.stateAbbreviation).to.equal("BC");
+    });
+
+    it('should parse a simple Canadian Address in Fort Langley', function() {
+        var result = addresser.parseAddress('9084 Glover RD, Fort Langley, BC, V1M 0E6');
+        expect(result.streetNumber).to.equal("9084");
+        expect(result.streetName).to.equal("Glover");
+        expect(result.streetSuffix).to.equal("Rd");
+        expect(result.streetDirection).to.equal(undefined);
+        expect(result.addressLine1).to.equal("9084 Glover Rd");
+        expect(result.hasOwnProperty("addressLine2")).to.equal(false);
+        expect(result.placeName).to.equal("Fort Langley");
+        expect(result.stateAbbreviation).to.equal("BC");
+    });
+
+    it("should parse a simple Canadian Address in Fort Qu'Appelle", function() {
+        var result = addresser.parseAddress("122 Company Ave S, Fort Qu'Appelle, SK S0G 1S0");
         expect(result.streetNumber).to.equal("122");
         expect(result.streetName).to.equal("Company");
         expect(result.streetSuffix).to.equal("Avenue");
         expect(result.streetDirection).to.equal('S');
         expect(result.addressLine1).to.equal("122 Company Avenue S");
         expect(result.hasOwnProperty("addressLine2")).to.equal(false);
-        expect(result.placeName).to.equal("Fort Qu’Appelle");
+        expect(result.placeName).to.equal("Fort Qu'Appelle");
         expect(result.stateAbbreviation).to.equal("SK");
     });
 
